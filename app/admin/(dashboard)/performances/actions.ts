@@ -5,15 +5,23 @@ import { performanceSchema } from '@/lib/validations/performance'
 import { uploadPosterImage, deletePosterImage } from '@/lib/supabase/storage'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { requireAdmin } from '@/lib/auth/admin'
+import { requireAdmin, canManageTheater } from '@/lib/auth/admin'
 import * as z from 'zod'
 
 /**
  * 公演を作成
+ * super_admin または 該当劇団のtheater_adminのみ実行可能
  */
 export async function createPerformance(formData: FormData) {
   try {
-    await requireAdmin()
+    const adminUser = await requireAdmin()
+
+    const theaterId = formData.get('theater_id') as string
+
+    // 権限チェック
+    if (!canManageTheater(adminUser, theaterId)) {
+      return { error: 'この劇団の公演を作成する権限がありません' }
+    }
 
     const imageFile = formData.get('poster_image') as File | null
     let posterImageUrl = ''
@@ -24,7 +32,7 @@ export async function createPerformance(formData: FormData) {
     }
 
     const validated = performanceSchema.parse({
-      theater_id: formData.get('theater_id'),
+      theater_id: theaterId,
       title: formData.get('title'),
       description: formData.get('description'),
       start_time: formData.get('start_time'),
@@ -58,19 +66,29 @@ export async function createPerformance(formData: FormData) {
 
 /**
  * 公演を更新
+ * super_admin または 該当劇団のtheater_adminのみ実行可能
  */
 export async function updatePerformance(id: string, formData: FormData) {
   try {
-    await requireAdmin()
+    const adminUser = await requireAdmin()
 
     const supabase = await createClient()
 
-    // 既存の公演情報を取得
+    // 既存の公演情報を取得（theater_idも取得）
     const { data: existing } = await supabase
       .from('performances')
-      .select('poster_image_url')
+      .select('poster_image_url, theater_id')
       .eq('id', id)
       .single()
+
+    if (!existing) {
+      return { error: '公演が見つかりません' }
+    }
+
+    // 権限チェック
+    if (!canManageTheater(adminUser, existing.theater_id)) {
+      return { error: 'この公演を編集する権限がありません' }
+    }
 
     const imageFile = formData.get('poster_image') as File | null
     let posterImageUrl = existing?.poster_image_url || ''
@@ -118,19 +136,29 @@ export async function updatePerformance(id: string, formData: FormData) {
 
 /**
  * 公演を削除
+ * super_admin または 該当劇団のtheater_adminのみ実行可能
  */
 export async function deletePerformance(id: string) {
   try {
-    await requireAdmin()
+    const adminUser = await requireAdmin()
 
     const supabase = await createClient()
 
-    // 公演情報を取得
+    // 公演情報を取得（theater_idも取得）
     const { data: performance } = await supabase
       .from('performances')
-      .select('poster_image_url')
+      .select('poster_image_url, theater_id')
       .eq('id', id)
       .single()
+
+    if (!performance) {
+      return { error: '公演が見つかりません' }
+    }
+
+    // 権限チェック
+    if (!canManageTheater(adminUser, performance.theater_id)) {
+      return { error: 'この公演を削除する権限がありません' }
+    }
 
     // 公演を削除
     const { error } = await supabase.from('performances').delete().eq('id', id)
