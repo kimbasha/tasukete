@@ -2,7 +2,7 @@
 
 -- 1. 劇団データを挿入
 INSERT INTO public.theaters (id, name, description, website) VALUES
-  ('11111111-1111-1111-1111-111111111111', '劇団タスケテ', '当日券に特化した新進気鋭の劇団。観客とのコミュニケーションを大切にしています。', 'https://example.com/theater1'),
+  ('11111111-1111-1111-1111-111111111111', '劇団金馬車', '演劇を通じて社会と向き合い、人々の心に響く作品を創造する劇団。', 'https://kimbasha.com/'),
   ('22222222-2222-2222-2222-222222222222', '夢空間カンパニー', '小劇場演劇を中心に活動する実験的な劇団。即興劇が得意です。', 'https://example.com/theater2'),
   ('33333333-3333-3333-3333-333333333333', 'ステージワークス', '音楽劇を得意とする劇団。ミュージカルからストレートプレイまで幅広く上演。', 'https://example.com/theater3')
 ON CONFLICT (id) DO NOTHING;
@@ -24,16 +24,16 @@ INSERT INTO public.performances (
 ) VALUES
   (
     '11111111-1111-1111-1111-111111111111',
-    'HELP ME!! 〜助けて〜',
-    '現代社会で孤立する若者たちの心の叫びを描いた衝撃作。SNSと現実の狭間で揺れ動く登場人物たちの物語。',
-    'タスケテ小劇場',
-    '渋谷',
+    '夜の街を駆ける',
+    '都会で生きる人々の心の交錯を描いた社会派ドラマ。現代社会の孤独と繋がりをテーマにした意欲作。',
+    '下北沢駅前劇場',
+    '下北沢',
     CURRENT_DATE,
     '19:00',
-    'https://placehold.co/400x600/4f46e5/ffffff?text=HELP+ME',
+    'https://placehold.co/400x600/d97706/ffffff?text=Night+Runner',
     15,
     2500,
-    'https://example.com/reserve/1',
+    'https://kimbasha.com/',
     'today'
   ),
   (
@@ -66,16 +66,16 @@ INSERT INTO public.performances (
   ),
   (
     '11111111-1111-1111-1111-111111111111',
-    'HELP ME!! 〜助けて〜（夜公演）',
-    '昼公演とは異なる演出で楽しめる夜公演。より深く、よりダークな世界観をお楽しみください。',
-    'タスケテ小劇場',
-    '渋谷',
+    '夜の街を駆ける（レイトショー）',
+    '昼公演とは異なる演出で楽しめるレイトショー。より深く、よりダークな世界観をお楽しみください。',
+    '下北沢駅前劇場',
+    '下北沢',
     CURRENT_DATE,
-    '21:00',
-    'https://placehold.co/400x600/4f46e5/ffffff?text=HELP+ME+Night',
+    '21:30',
+    'https://placehold.co/400x600/d97706/ffffff?text=Night+Runner+Late',
     5,
     2800,
-    'https://example.com/reserve/4',
+    'https://kimbasha.com/',
     'today'
   ),
   (
