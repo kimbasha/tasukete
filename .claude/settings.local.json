@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nchore: .gitignoreを更新\n\nNext.js用のignore項目を追加\n- node_modules, .next, .envなど\n- TypeScript関連ファイル\n- IDE設定ファイル\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(npx create-next-app:*)"
+    ]
+  }
+}
