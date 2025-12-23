@@ -10,13 +10,20 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DeleteTheaterButton } from '@/components/admin/DeleteTheaterButton'
+import { requireAdmin, isSuperAdmin, isTheaterAdmin } from '@/lib/auth/admin'
 
 export default async function TheatersPage() {
+  const adminUser = await requireAdmin()
   const supabase = await createClient()
-  const { data: theaters } = await supabase
-    .from('theaters')
-    .select('*')
-    .order('name')
+
+  // theater_adminは自分の劇団のみ表示
+  let query = supabase.from('theaters').select('*')
+
+  if (isTheaterAdmin(adminUser)) {
+    query = query.eq('id', adminUser.theater_id!)
+  }
+
+  const { data: theaters } = await query.order('name')
 
   return (
     <div className="space-y-6">
@@ -25,9 +32,11 @@ export default async function TheatersPage() {
           <h2 className="text-3xl font-bold tracking-tight">劇団管理</h2>
           <p className="text-muted-foreground">劇団の登録・編集・削除</p>
         </div>
-        <Button asChild>
-          <Link href="/admin/theaters/new">劇団を追加</Link>
-        </Button>
+        {isSuperAdmin(adminUser) && (
+          <Button asChild>
+            <Link href="/admin/theaters/new">劇団を追加</Link>
+          </Button>
+        )}
       </div>
 
       <div className="rounded-md border">
@@ -54,10 +63,12 @@ export default async function TheatersPage() {
                           編集
                         </Link>
                       </Button>
-                      <DeleteTheaterButton
-                        id={theater.id}
-                        name={theater.name}
-                      />
+                      {isSuperAdmin(adminUser) && (
+                        <DeleteTheaterButton
+                          id={theater.id}
+                          name={theater.name}
+                        />
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>

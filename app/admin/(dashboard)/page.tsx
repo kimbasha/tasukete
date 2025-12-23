@@ -9,9 +9,40 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { requireAdmin, isTheaterAdmin } from '@/lib/auth/admin'
 
 export default async function AdminDashboard() {
+  const adminUser = await requireAdmin()
   const supabase = await createClient()
+
+  // theater_adminは自分の劇団のみにフィルタ
+  let theatersQuery = supabase.from('theaters').select('*', { count: 'exact', head: true })
+  let performancesQuery = supabase.from('performances').select('*', { count: 'exact', head: true })
+  let todayPerformancesQuery = supabase
+    .from('performances')
+    .select('*', { count: 'exact', head: true })
+    .gte('start_time', new Date().toISOString().split('T')[0])
+    .lt('start_time', new Date(Date.now() + 86400000).toISOString().split('T')[0])
+  let recentPerformancesQuery = supabase
+    .from('performances')
+    .select('*, theaters(name)')
+    .order('created_at', { ascending: false })
+    .limit(5)
+  let lowStockPerformancesQuery = supabase
+    .from('performances')
+    .select('*, theaters(name)')
+    .lte('remaining_tickets', 10)
+    .gte('start_time', new Date().toISOString())
+    .order('remaining_tickets', { ascending: true })
+    .limit(5)
+
+  if (isTheaterAdmin(adminUser)) {
+    theatersQuery = theatersQuery.eq('id', adminUser.theater_id!)
+    performancesQuery = performancesQuery.eq('theater_id', adminUser.theater_id!)
+    todayPerformancesQuery = todayPerformancesQuery.eq('theater_id', adminUser.theater_id!)
+    recentPerformancesQuery = recentPerformancesQuery.eq('theater_id', adminUser.theater_id!)
+    lowStockPerformancesQuery = lowStockPerformancesQuery.eq('theater_id', adminUser.theater_id!)
+  }
 
   // 統計データを取得
   const [
@@ -21,25 +52,11 @@ export default async function AdminDashboard() {
     { data: recentPerformances },
     { data: lowStockPerformances },
   ] = await Promise.all([
-    supabase.from('theaters').select('*', { count: 'exact', head: true }),
-    supabase.from('performances').select('*', { count: 'exact', head: true }),
-    supabase
-      .from('performances')
-      .select('*', { count: 'exact', head: true })
-      .gte('start_time', new Date().toISOString().split('T')[0])
-      .lt('start_time', new Date(Date.now() + 86400000).toISOString().split('T')[0]),
-    supabase
-      .from('performances')
-      .select('*, theaters(name)')
-      .order('created_at', { ascending: false })
-      .limit(5),
-    supabase
-      .from('performances')
-      .select('*, theaters(name)')
-      .lte('remaining_tickets', 10)
-      .gte('start_time', new Date().toISOString())
-      .order('remaining_tickets', { ascending: true })
-      .limit(5),
+    theatersQuery,
+    performancesQuery,
+    todayPerformancesQuery,
+    recentPerformancesQuery,
+    lowStockPerformancesQuery,
   ])
 
   return (
