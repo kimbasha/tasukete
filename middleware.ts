@@ -17,9 +17,10 @@ export async function middleware(request: NextRequest) {
           return request.cookies.getAll()
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
+          cookiesToSet.forEach(({ name, value, options }) => {
+            request.cookies.set(name, value)
             response.cookies.set(name, value, options)
-          )
+          })
         },
       },
     }
@@ -29,12 +30,22 @@ export async function middleware(request: NextRequest) {
 
   // 未認証でログインページ以外にアクセスした場合、ログインページにリダイレクト
   if (!user && !request.nextUrl.pathname.startsWith('/admin/login')) {
-    return NextResponse.redirect(new URL('/admin/login', request.url))
+    const redirectResponse = NextResponse.redirect(new URL('/admin/login', request.url))
+    // クッキーを引き継ぐ
+    response.cookies.getAll().forEach(cookie => {
+      redirectResponse.cookies.set(cookie.name, cookie.value)
+    })
+    return redirectResponse
   }
 
   // 認証済みでログインページにアクセスした場合、ダッシュボードにリダイレクト
   if (user && request.nextUrl.pathname.startsWith('/admin/login')) {
-    return NextResponse.redirect(new URL('/admin', request.url))
+    const redirectResponse = NextResponse.redirect(new URL('/admin', request.url))
+    // クッキーを引き継ぐ
+    response.cookies.getAll().forEach(cookie => {
+      redirectResponse.cookies.set(cookie.name, cookie.value)
+    })
+    return redirectResponse
   }
 
   return response

@@ -14,7 +14,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { deletePerformance } from '@/app/admin/performances/actions'
+import { deletePerformance } from '@/app/admin/(dashboard)/performances/actions'
 
 interface DeletePerformanceButtonProps {
   id: string

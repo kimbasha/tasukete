@@ -2,7 +2,7 @@ import { requireAdmin } from '@/lib/auth/admin'
 import { Sidebar } from '@/components/admin/Sidebar'
 import { Header } from '@/components/admin/Header'
 
-export default async function AdminLayout({
+export default async function AdminDashboardLayout({
   children,
 }: {
   children: React.ReactNode

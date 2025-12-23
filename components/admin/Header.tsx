@@ -7,7 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { signOut } from '@/app/admin/actions/auth'
+import { signOut } from '@/app/admin/(dashboard)/actions/auth'
 
 interface HeaderProps {
   userEmail: string
