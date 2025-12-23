@@ -28,24 +28,41 @@ export async function getAdminUser(): Promise<AdminUser | null> {
     return null
   }
 
-  // admin_usersテーブルで管理者かチェック
-  const { data: adminUser } = await supabase
-    .from('admin_users')
+  // super_adminsテーブルをチェック
+  const { data: superAdmin } = await supabase
+    .from('super_admins')
     .select('*')
     .eq('id', user.id)
     .single()
 
-  if (!adminUser) {
-    return null
+  if (superAdmin) {
+    return {
+      id: superAdmin.id,
+      email: superAdmin.email,
+      role: 'super_admin',
+      theater_id: null,
+      created_at: superAdmin.created_at,
+    }
   }
 
-  return {
-    id: adminUser.id,
-    email: adminUser.email,
-    role: adminUser.role as AdminRole,
-    theater_id: adminUser.theater_id,
-    created_at: adminUser.created_at,
+  // theater_adminsテーブルをチェック
+  const { data: theaterAdmin } = await supabase
+    .from('theater_admins')
+    .select('*')
+    .eq('id', user.id)
+    .single()
+
+  if (theaterAdmin) {
+    return {
+      id: theaterAdmin.id,
+      email: theaterAdmin.email,
+      role: 'theater_admin',
+      theater_id: theaterAdmin.theater_id,
+      created_at: theaterAdmin.created_at,
+    }
   }
+
+  return null
 }
 
 /**
