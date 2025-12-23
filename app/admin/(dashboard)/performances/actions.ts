@@ -36,7 +36,7 @@ export async function createPerformance(formData: FormData) {
       title: formData.get('title'),
       description: formData.get('description'),
       start_time: formData.get('start_time'),
-      remaining_tickets: formData.get('remaining_tickets'),
+      remaining_tickets: Number(formData.get('remaining_tickets')),
       area: formData.get('area'),
       poster_image_url: posterImageUrl,
     })
@@ -108,7 +108,7 @@ export async function updatePerformance(id: string, formData: FormData) {
       title: formData.get('title'),
       description: formData.get('description'),
       start_time: formData.get('start_time'),
-      remaining_tickets: formData.get('remaining_tickets'),
+      remaining_tickets: Number(formData.get('remaining_tickets')),
       area: formData.get('area'),
       poster_image_url: posterImageUrl,
     })
