@@ -27,12 +27,8 @@ FROM public.admin_users
 WHERE role = 'super_admin'
 ON CONFLICT (id) DO NOTHING;
 
--- theater_adminロールのユーザーをtheater_adminsに移行（該当データがある場合）
-INSERT INTO public.theater_admins (id, email, theater_id, created_at)
-SELECT id, email, theater_id, created_at
-FROM public.admin_users
-WHERE role = 'theater_admin' AND theater_id IS NOT NULL
-ON CONFLICT (id) DO NOTHING;
+-- theater_adminはまだ存在しないため、移行は不要
+-- 将来的にtheater_adminを作成する場合は、theater_adminsテーブルに直接INSERTする
 
 -- 5. RLSを有効化
 ALTER TABLE public.super_admins ENABLE ROW LEVEL SECURITY;
