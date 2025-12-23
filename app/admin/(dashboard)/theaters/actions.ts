@@ -4,15 +4,16 @@ import { createClient } from '@/lib/supabase/server'
 import { theaterSchema } from '@/lib/validations/theater'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { requireAdmin } from '@/lib/auth/admin'
+import { requireAdmin, requireSuperAdmin, canManageTheater } from '@/lib/auth/admin'
 import * as z from 'zod'
 
 /**
  * 劇団を作成
+ * super_adminのみ実行可能
  */
 export async function createTheater(formData: FormData) {
   try {
-    await requireAdmin()
+    await requireSuperAdmin()
 
     const validated = theaterSchema.parse({
       name: formData.get('name'),
@@ -39,10 +40,16 @@ export async function createTheater(formData: FormData) {
 
 /**
  * 劇団を更新
+ * super_admin または 該当劇団のtheater_adminのみ実行可能
  */
 export async function updateTheater(id: string, formData: FormData) {
   try {
-    await requireAdmin()
+    const adminUser = await requireAdmin()
+
+    // 権限チェック
+    if (!canManageTheater(adminUser, id)) {
+      return { error: 'この劇団を編集する権限がありません' }
+    }
 
     const validated = theaterSchema.parse({
       name: formData.get('name'),
@@ -72,10 +79,11 @@ export async function updateTheater(id: string, formData: FormData) {
 
 /**
  * 劇団を削除
+ * super_adminのみ実行可能
  */
 export async function deleteTheater(id: string) {
   try {
-    await requireAdmin()
+    await requireSuperAdmin()
 
     const supabase = await createClient()
     const { error } = await supabase.from('theaters').delete().eq('id', id)
