@@ -1,6 +1,6 @@
 'use server'
 
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { requireSuperAdmin } from '@/lib/auth/admin'
@@ -21,7 +21,7 @@ export async function createTheaterAdmin(formData: FormData) {
       return { error: '全ての項目を入力してください' }
     }
 
-    const supabase = await createClient()
+    const supabase = await createAdminClient()
 
     // Supabase Admin APIを使ってユーザーを作成
     const { data: authData, error: authError } = await supabase.auth.admin.createUser({
@@ -64,7 +64,7 @@ export async function deleteTheaterAdmin(id: string) {
   try {
     await requireSuperAdmin()
 
-    const supabase = await createClient()
+    const supabase = await createAdminClient()
 
     // theater_adminsから削除（CASCADEでauth.usersからも削除される）
     const { error: dbError } = await supabase
