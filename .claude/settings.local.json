@@ -7,7 +7,10 @@
       "Bash(git restore:*)",
       "Bash(git log:*)",
       "Bash(ls:*)",
-      "mcp__ide__getDiagnostics"
+      "mcp__ide__getDiagnostics",
+      "Bash(brew install:*)",
+      "Bash(supabase --version:*)",
+      "Bash(supabase login:*)"
     ]
   }
 }

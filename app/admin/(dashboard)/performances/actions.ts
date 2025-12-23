@@ -56,7 +56,7 @@ export async function createPerformance(formData: FormData) {
     revalidatePath('/')
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return { error: 'バリデーションエラー', details: error.errors }
+      return { error: 'バリデーションエラー', details: error.issues }
     }
     return { error: '予期しないエラーが発生しました' }
   }
@@ -126,7 +126,7 @@ export async function updatePerformance(id: string, formData: FormData) {
     revalidatePath('/')
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return { error: 'バリデーションエラー', details: error.errors }
+      return { error: 'バリデーションエラー', details: error.issues }
     }
     return { error: '予期しないエラーが発生しました' }
   }
