@@ -30,7 +30,7 @@ export async function createTheater(formData: FormData) {
     revalidatePath('/')
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return { error: 'バリデーションエラー', details: error.errors }
+      return { error: 'バリデーションエラー', details: error.issues }
     }
     return { error: '予期しないエラーが発生しました' }
   }
@@ -69,7 +69,7 @@ export async function updateTheater(id: string, formData: FormData) {
     revalidatePath('/')
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return { error: 'バリデーションエラー', details: error.errors }
+      return { error: 'バリデーションエラー', details: error.issues }
     }
     return { error: '予期しないエラーが発生しました' }
   }
