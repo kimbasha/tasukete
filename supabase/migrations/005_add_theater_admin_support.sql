@@ -27,12 +27,8 @@ FROM public.admin_users
 WHERE role = 'super_admin'
 ON CONFLICT (id) DO NOTHING;
 
--- theater_adminロールのユーザーをtheater_adminsに移行（該当データがある場合）
-INSERT INTO public.theater_admins (id, email, theater_id, created_at)
-SELECT id, email, theater_id, created_at
-FROM public.admin_users
-WHERE role = 'theater_admin' AND theater_id IS NOT NULL
-ON CONFLICT (id) DO NOTHING;
+-- theater_adminはまだ存在しないため、移行は不要
+-- 将来的にtheater_adminを作成する場合は、theater_adminsテーブルに直接INSERTする
 
 -- 5. RLSを有効化
 ALTER TABLE public.super_admins ENABLE ROW LEVEL SECURITY;
@@ -132,7 +128,43 @@ CREATE POLICY "performances_delete_policy" ON public.performances
     )
   );
 
--- 10. admin_users テーブルは後方互換性のため残す
+-- 10. Storage bucketのポリシーを更新
+-- 既存のポリシーを削除して、新しいテーブル構造に対応したポリシーを作成
+
+DROP POLICY IF EXISTS "performance_posters_insert_policy" ON storage.objects;
+CREATE POLICY "performance_posters_insert_policy"
+ON storage.objects FOR INSERT
+TO public
+WITH CHECK (
+  bucket_id = 'performance-posters' AND (
+    EXISTS (SELECT 1 FROM public.super_admins WHERE id = auth.uid())
+    OR EXISTS (SELECT 1 FROM public.theater_admins WHERE id = auth.uid())
+  )
+);
+
+DROP POLICY IF EXISTS "performance_posters_update_policy" ON storage.objects;
+CREATE POLICY "performance_posters_update_policy"
+ON storage.objects FOR UPDATE
+TO public
+USING (
+  bucket_id = 'performance-posters' AND (
+    EXISTS (SELECT 1 FROM public.super_admins WHERE id = auth.uid())
+    OR EXISTS (SELECT 1 FROM public.theater_admins WHERE id = auth.uid())
+  )
+);
+
+DROP POLICY IF EXISTS "performance_posters_delete_policy" ON storage.objects;
+CREATE POLICY "performance_posters_delete_policy"
+ON storage.objects FOR DELETE
+TO public
+USING (
+  bucket_id = 'performance-posters' AND (
+    EXISTS (SELECT 1 FROM public.super_admins WHERE id = auth.uid())
+    OR EXISTS (SELECT 1 FROM public.theater_admins WHERE id = auth.uid())
+  )
+);
+
+-- 11. admin_users テーブルは後方互換性のため残す
 -- 将来的に削除する場合は、別のマイグレーションで実施
 -- DROP TABLE IF EXISTS public.admin_users;
 
