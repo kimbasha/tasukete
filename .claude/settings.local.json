@@ -6,7 +6,8 @@
       "Bash(npx create-next-app:*)",
       "Bash(git restore:*)",
       "Bash(git log:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "mcp__ide__getDiagnostics"
     ]
   }
 }

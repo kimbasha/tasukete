@@ -17,6 +17,10 @@ const navItems = [
     title: '公演管理',
     href: '/admin/performances',
   },
+  {
+    title: 'ユーザー管理',
+    href: '/admin/users',
+  },
 ]
 
 export function Sidebar() {
