@@ -11,13 +11,20 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DeletePerformanceButton } from '@/components/admin/DeletePerformanceButton'
+import { requireAdmin, isTheaterAdmin } from '@/lib/auth/admin'
 
 export default async function PerformancesPage() {
+  const adminUser = await requireAdmin()
   const supabase = await createClient()
-  const { data: performances } = await supabase
-    .from('performances')
-    .select('*, theaters(name)')
-    .order('start_time', { ascending: false })
+
+  // theater_adminは自分の劇団の公演のみ表示
+  let query = supabase.from('performances').select('*, theaters(name)')
+
+  if (isTheaterAdmin(adminUser)) {
+    query = query.eq('theater_id', adminUser.theater_id!)
+  }
+
+  const { data: performances } = await query.order('start_time', { ascending: false })
 
   return (
     <div className="space-y-6">

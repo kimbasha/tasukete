@@ -43,9 +43,10 @@ interface PerformanceFormProps {
     area: string
     poster_image_url?: string
   }
+  isTheaterFixed?: boolean
 }
 
-export function PerformanceForm({ theaters, initialData }: PerformanceFormProps) {
+export function PerformanceForm({ theaters, initialData, isTheaterFixed = false }: PerformanceFormProps) {
   const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -107,7 +108,11 @@ export function PerformanceForm({ theaters, initialData }: PerformanceFormProps)
           render={({ field }) => (
             <FormItem>
               <FormLabel>劇団</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                disabled={isTheaterFixed}
+              >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="劇団を選択" />
