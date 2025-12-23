@@ -14,7 +14,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { deleteTheater } from '@/app/admin/theaters/actions'
+import { deleteTheater } from '@/app/admin/(dashboard)/theaters/actions'
 
 interface DeleteTheaterButtonProps {
   id: string

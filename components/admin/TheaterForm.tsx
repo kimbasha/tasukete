@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { createTheater, updateTheater } from '@/app/admin/theaters/actions'
+import { createTheater, updateTheater } from '@/app/admin/(dashboard)/theaters/actions'
 
 interface TheaterFormProps {
   initialData?: {

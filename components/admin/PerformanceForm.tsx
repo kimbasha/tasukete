@@ -24,7 +24,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { ImageUpload } from './ImageUpload'
-import { createPerformance, updatePerformance } from '@/app/admin/performances/actions'
+import { createPerformance, updatePerformance } from '@/app/admin/(dashboard)/performances/actions'
 
 interface Theater {
   id: string
