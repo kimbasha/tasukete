@@ -141,7 +141,7 @@ export function PerformanceForm({ theaters, initialData, isTheaterFixed = false 
                 <FormLabel>劇団</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  value={field.value}
+                  value={field.value || undefined}
                 >
                   <FormControl>
                     <SelectTrigger>
