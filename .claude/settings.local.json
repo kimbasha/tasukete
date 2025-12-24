@@ -11,7 +11,9 @@
       "Bash(brew install:*)",
       "Bash(supabase --version:*)",
       "Bash(supabase login:*)",
-      "Bash(npx husky init)"
+      "Bash(npx husky init)",
+      "Bash(npm run type-check:*)",
+      "Bash(npm run build:*)"
     ]
   }
 }

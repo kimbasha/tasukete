@@ -40,7 +40,7 @@ interface PerformanceFormProps {
     description: string
     start_time: string
     remaining_tickets: number
-    area: string
+    area: '東京' | '大阪' | '名古屋' | 'その他'
     poster_image_url?: string
   }
   isTheaterFixed?: boolean
