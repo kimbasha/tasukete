@@ -16,7 +16,7 @@ export default async function AdminDashboard() {
   const supabase = await createClient()
 
   // theater_adminは自分の劇団のみにフィルタ
-  let theatersQuery = supabase.from('theaters').select('*', { count: 'exact', head: true })
+  let theatersQuery = supabase.from('troupes').select('*', { count: 'exact', head: true })
   let performancesQuery = supabase.from('performances').select('*', { count: 'exact', head: true })
   const today = new Date().toISOString().split('T')[0]
 
@@ -26,12 +26,12 @@ export default async function AdminDashboard() {
     .eq('performance_date', today)
   let recentPerformancesQuery = supabase
     .from('performances')
-    .select('*, theaters(name)')
+    .select('*, troupes(name)')
     .order('created_at', { ascending: false })
     .limit(5)
   let lowStockPerformancesQuery = supabase
     .from('performances')
-    .select('*, theaters(name)')
+    .select('*, troupes(name)')
     .lte('available_tickets', 10)
     .gte('performance_date', today)
     .order('available_tickets', { ascending: true })
@@ -135,7 +135,7 @@ export default async function AdminDashboard() {
                   <div className="flex-1 space-y-1">
                     <p className="font-medium leading-none">{performance.title}</p>
                     <p className="text-sm text-muted-foreground">
-                      {performance.theaters?.name}
+                      {performance.troupes?.name}
                     </p>
                     <p className="text-xs text-muted-foreground">
                       {`${performance.performance_date} ${performance.start_time}`}
@@ -178,7 +178,7 @@ export default async function AdminDashboard() {
                   <div>
                     <p className="font-medium">{performance.title}</p>
                     <p className="text-sm text-muted-foreground">
-                      {performance.theaters?.name} •{' '}
+                      {performance.troupes?.name} •{' '}
                       {`${performance.performance_date} ${performance.start_time}`}
                     </p>
                   </div>

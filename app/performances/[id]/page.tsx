@@ -70,9 +70,9 @@ export default async function PerformancePage({ params }: Props) {
                   <h1 className="text-3xl font-bold">{performance.title}</h1>
                   <TicketStatusBadge availableTickets={performance.available_tickets} />
                 </div>
-                {performance.theater && (
+                {performance.troupe && (
                   <p className="text-lg text-muted-foreground">
-                    {performance.theater.name}
+                    {performance.troupe.name}
                   </p>
                 )}
               </div>
@@ -149,23 +149,23 @@ export default async function PerformancePage({ params }: Props) {
           )}
 
           {/* 劇団情報 */}
-          {performance.theater && (
+          {performance.troupe && (
             <div className="mt-8">
               <h2 className="text-2xl font-bold mb-4">劇団情報</h2>
               <Card>
                 <CardContent className="pt-6">
                   <h3 className="text-xl font-semibold mb-2">
-                    {performance.theater.name}
+                    {performance.troupe.name}
                   </h3>
-                  {performance.theater.description && (
+                  {performance.troupe.description && (
                     <p className="text-muted-foreground mb-4">
-                      {performance.theater.description}
+                      {performance.troupe.description}
                     </p>
                   )}
-                  {performance.theater.website && (
+                  {performance.troupe.website && (
                     <Button asChild variant="outline" size="sm">
                       <a
-                        href={performance.theater.website}
+                        href={performance.troupe.website}
                         target="_blank"
                         rel="noopener noreferrer"
                       >

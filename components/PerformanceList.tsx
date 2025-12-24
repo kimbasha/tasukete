@@ -1,12 +1,12 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { Performance, Theater } from '@/types/database'
+import { Performance, Troupe } from '@/types/database'
 import { PerformanceCard } from '@/components/PerformanceCard'
 import { FilterBar } from '@/components/FilterBar'
 
 interface PerformanceListProps {
-  performances: (Performance & { theater?: Theater })[]
+  performances: (Performance & { troupe?: Troupe })[]
 }
 
 export function PerformanceList({ performances }: PerformanceListProps) {

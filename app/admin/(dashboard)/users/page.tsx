@@ -19,7 +19,7 @@ export default async function UsersPage() {
   // theater_adminsとtheatersをJOINして取得
   const { data: theaterAdmins } = await supabase
     .from('theater_admins')
-    .select('*, theaters(name)')
+    .select('*, troupes(name)')
     .order('created_at', { ascending: false })
 
   return (
@@ -49,7 +49,7 @@ export default async function UsersPage() {
               theaterAdmins.map((admin) => (
                 <TableRow key={admin.id}>
                   <TableCell className="font-medium">{admin.email}</TableCell>
-                  <TableCell>{admin.theaters?.name || '未設定'}</TableCell>
+                  <TableCell>{admin.troupes?.name || '未設定'}</TableCell>
                   <TableCell>
                     {new Date(admin.created_at).toLocaleDateString('ja-JP')}
                   </TableCell>

@@ -11,7 +11,7 @@ export default async function EditTheaterPage({ params }: EditTheaterPageProps) 
   const supabase = await createClient()
 
   const { data: theater } = await supabase
-    .from('theaters')
+    .from('troupes')
     .select('*')
     .eq('id', id)
     .single()

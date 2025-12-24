@@ -7,7 +7,7 @@ export default async function NewUserPage() {
   const supabase = await createClient()
 
   const { data: theaters } = await supabase
-    .from('theaters')
+    .from('troupes')
     .select('id, name')
     .order('name')
 

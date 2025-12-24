@@ -20,7 +20,7 @@ export async function createTheater(formData: FormData) {
     })
 
     const supabase = await createClient()
-    const { error } = await supabase.from('theaters').insert(validated)
+    const { error } = await supabase.from('troupes').insert(validated)
 
     if (error) {
       return { error: error.message }
@@ -57,7 +57,7 @@ export async function updateTheater(id: string, formData: FormData) {
 
     const supabase = await createClient()
     const { error } = await supabase
-      .from('theaters')
+      .from('troupes')
       .update(validated)
       .eq('id', id)
 
@@ -86,7 +86,7 @@ export async function deleteTheater(id: string) {
     await requireSuperAdmin()
 
     const supabase = await createClient()
-    const { error } = await supabase.from('theaters').delete().eq('id', id)
+    const { error } = await supabase.from('troupes').delete().eq('id', id)
 
     if (error) {
       return { error: error.message }
