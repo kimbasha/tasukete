@@ -1,7 +1,7 @@
 import * as z from 'zod'
 
 export const performanceSchema = z.object({
-  theater_id: z.string().uuid('劇団を選択してください'),
+  theater_id: z.string().min(1, '劇団を選択してください'),
   title: z.string().min(1, '公演タイトルを入力してください'),
   description: z.string().optional(),
   venue: z.string().min(1, '会場を入力してください'),
