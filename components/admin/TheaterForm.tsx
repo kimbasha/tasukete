@@ -15,12 +15,15 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import { createTheater, updateTheater } from '@/app/admin/(dashboard)/theaters/actions'
 
 interface TheaterFormProps {
   initialData?: {
     id: string
     name: string
+    description?: string | null
+    website?: string | null
   }
 }
 
@@ -33,6 +36,8 @@ export function TheaterForm({ initialData }: TheaterFormProps) {
     resolver: zodResolver(theaterSchema),
     defaultValues: {
       name: initialData?.name || '',
+      description: initialData?.description || '',
+      website: initialData?.website || '',
     },
   })
 
@@ -43,6 +48,8 @@ export function TheaterForm({ initialData }: TheaterFormProps) {
 
       const formData = new FormData()
       formData.append('name', values.name)
+      if (values.description) formData.append('description', values.description)
+      if (values.website) formData.append('website', values.website)
 
       const result = initialData
         ? await updateTheater(initialData.id, formData)
@@ -77,6 +84,43 @@ export function TheaterForm({ initialData }: TheaterFormProps) {
             </FormItem>
           )}
         />
+
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>説明（任意）</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="劇団の紹介文や活動内容を入力"
+                  rows={5}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="website"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>ウェブサイト（任意）</FormLabel>
+              <FormControl>
+                <Input
+                  type="url"
+                  placeholder="https://example.com"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         {error && <div className="text-sm text-destructive">{error}</div>}
         <div className="flex gap-4">
           <Button type="submit" disabled={isLoading}>

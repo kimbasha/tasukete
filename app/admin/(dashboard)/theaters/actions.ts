@@ -17,6 +17,8 @@ export async function createTheater(formData: FormData) {
 
     const validated = theaterSchema.parse({
       name: formData.get('name'),
+      description: formData.get('description') || undefined,
+      website: formData.get('website') || undefined,
     })
 
     const supabase = await createClient()
@@ -53,6 +55,8 @@ export async function updateTheater(id: string, formData: FormData) {
 
     const validated = theaterSchema.parse({
       name: formData.get('name'),
+      description: formData.get('description') || undefined,
+      website: formData.get('website') || undefined,
     })
 
     const supabase = await createClient()

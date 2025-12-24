@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/table'
 import { DeleteTheaterButton } from '@/components/admin/DeleteTheaterButton'
 import { requireAdmin, isSuperAdmin, isTheaterAdmin } from '@/lib/auth/admin'
+import { ExternalLink } from 'lucide-react'
 
 export default async function TheatersPage() {
   const adminUser = await requireAdmin()
@@ -44,6 +45,8 @@ export default async function TheatersPage() {
           <TableHeader>
             <TableRow>
               <TableHead>劇団名</TableHead>
+              <TableHead>説明</TableHead>
+              <TableHead className="w-[100px]">サイト</TableHead>
               <TableHead>作成日</TableHead>
               <TableHead className="text-right">操作</TableHead>
             </TableRow>
@@ -53,6 +56,33 @@ export default async function TheatersPage() {
               theaters.map((theater) => (
                 <TableRow key={theater.id}>
                   <TableCell className="font-medium">{theater.name}</TableCell>
+                  <TableCell className="max-w-xs">
+                    {theater.description ? (
+                      <span className="text-sm text-muted-foreground line-clamp-2">
+                        {theater.description}
+                      </span>
+                    ) : (
+                      <span className="text-sm text-muted-foreground italic">
+                        未設定
+                      </span>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {theater.website ? (
+                      <Button asChild variant="ghost" size="sm">
+                        <a
+                          href={theater.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+                      </Button>
+                    ) : (
+                      <span className="text-sm text-muted-foreground">-</span>
+                    )}
+                  </TableCell>
                   <TableCell>
                     {new Date(theater.created_at).toLocaleDateString('ja-JP')}
                   </TableCell>
@@ -75,7 +105,7 @@ export default async function TheatersPage() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={3} className="text-center">
+                <TableCell colSpan={5} className="text-center">
                   劇団がまだ登録されていません
                 </TableCell>
               </TableRow>
