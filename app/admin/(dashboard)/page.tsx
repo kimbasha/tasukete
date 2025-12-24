@@ -18,11 +18,12 @@ export default async function AdminDashboard() {
   // theater_adminは自分の劇団のみにフィルタ
   let theatersQuery = supabase.from('theaters').select('*', { count: 'exact', head: true })
   let performancesQuery = supabase.from('performances').select('*', { count: 'exact', head: true })
+  const today = new Date().toISOString().split('T')[0]
+
   let todayPerformancesQuery = supabase
     .from('performances')
     .select('*', { count: 'exact', head: true })
-    .gte('start_time', new Date().toISOString().split('T')[0])
-    .lt('start_time', new Date(Date.now() + 86400000).toISOString().split('T')[0])
+    .eq('performance_date', today)
   let recentPerformancesQuery = supabase
     .from('performances')
     .select('*, theaters(name)')
@@ -31,9 +32,9 @@ export default async function AdminDashboard() {
   let lowStockPerformancesQuery = supabase
     .from('performances')
     .select('*, theaters(name)')
-    .lte('remaining_tickets', 10)
-    .gte('start_time', new Date().toISOString())
-    .order('remaining_tickets', { ascending: true })
+    .lte('available_tickets', 10)
+    .gte('performance_date', today)
+    .order('available_tickets', { ascending: true })
     .limit(5)
 
   if (isTheaterAdmin(adminUser)) {
@@ -137,11 +138,13 @@ export default async function AdminDashboard() {
                       {performance.theaters?.name}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {new Date(performance.start_time).toLocaleString('ja-JP')}
+                      {`${performance.performance_date} ${performance.start_time}`}
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-medium">残{performance.remaining_tickets}枚</p>
+                    <p className="text-sm font-medium">
+                      {performance.available_tickets !== null ? `残${performance.available_tickets}枚` : '残券数不明'}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -172,12 +175,12 @@ export default async function AdminDashboard() {
                     <p className="font-medium">{performance.title}</p>
                     <p className="text-sm text-muted-foreground">
                       {performance.theaters?.name} •{' '}
-                      {new Date(performance.start_time).toLocaleString('ja-JP')}
+                      {`${performance.performance_date} ${performance.start_time}`}
                     </p>
                   </div>
                   <div className="text-right">
                     <p className="font-bold text-destructive">
-                      残{performance.remaining_tickets}枚
+                      {performance.available_tickets !== null ? `残${performance.available_tickets}枚` : '残券数不明'}
                     </p>
                   </div>
                 </div>

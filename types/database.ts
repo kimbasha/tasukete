@@ -46,8 +46,9 @@ export interface Database {
           area: string
           performance_date: string
           start_time: string
+          door_open_time: string | null
           poster_image_url: string | null
-          available_tickets: number
+          available_tickets: number | null
           ticket_price: number
           reservation_url: string | null
           status: 'upcoming' | 'today' | 'ended'
@@ -63,8 +64,9 @@ export interface Database {
           area: string
           performance_date: string
           start_time: string
+          door_open_time?: string | null
           poster_image_url?: string | null
-          available_tickets: number
+          available_tickets?: number | null
           ticket_price: number
           reservation_url?: string | null
           status?: 'upcoming' | 'today' | 'ended'
@@ -80,8 +82,9 @@ export interface Database {
           area?: string
           performance_date?: string
           start_time?: string
+          door_open_time?: string | null
           poster_image_url?: string | null
-          available_tickets?: number
+          available_tickets?: number | null
           ticket_price?: number
           reservation_url?: string | null
           status?: 'upcoming' | 'today' | 'ended'
@@ -120,10 +123,10 @@ export interface Database {
         Relationships: []
       }
     }
-    Views: {}
-    Functions: {}
-    Enums: {}
-    CompositeTypes: {}
+    Views: Record<string, never>
+    Functions: Record<string, never>
+    Enums: Record<string, never>
+    CompositeTypes: Record<string, never>
   }
 }
 

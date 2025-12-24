@@ -37,10 +37,15 @@ interface PerformanceFormProps {
     id: string
     theater_id: string
     title: string
-    description: string
+    description?: string
+    venue: string
+    area: string
+    performance_date: string
     start_time: string
-    remaining_tickets: number
-    area: '東京' | '大阪' | '名古屋' | 'その他'
+    door_open_time?: string
+    available_tickets: number
+    ticket_price: number
+    reservation_url?: string
     poster_image_url?: string
   }
   isTheaterFixed?: boolean
@@ -58,14 +63,19 @@ export function PerformanceForm({ theaters, initialData, isTheaterFixed = false 
       theater_id: initialData?.theater_id || '',
       title: initialData?.title || '',
       description: initialData?.description || '',
-      start_time: initialData?.start_time ? new Date(initialData.start_time).toISOString().slice(0, 16) : '',
-      remaining_tickets: initialData?.remaining_tickets || 0,
-      area: initialData?.area || '東京',
+      venue: initialData?.venue || '',
+      area: (initialData?.area as '下北沢' | '新宿' | '渋谷' | '池袋' | 'その他' | undefined) || '下北沢',
+      performance_date: initialData?.performance_date || '',
+      start_time: initialData?.start_time || '',
+      door_open_time: initialData?.door_open_time || '',
+      available_tickets: initialData?.available_tickets || undefined,
+      ticket_price: initialData?.ticket_price || 0,
+      reservation_url: initialData?.reservation_url || '',
       poster_image_url: initialData?.poster_image_url || '',
     },
   })
 
-  async function onSubmit(values: PerformanceFormValues) {
+  const onSubmit = async (values: PerformanceFormValues) => {
     try {
       setIsLoading(true)
       setError(null)
@@ -73,10 +83,17 @@ export function PerformanceForm({ theaters, initialData, isTheaterFixed = false 
       const formData = new FormData()
       formData.append('theater_id', values.theater_id)
       formData.append('title', values.title)
-      formData.append('description', values.description)
-      formData.append('start_time', new Date(values.start_time).toISOString())
-      formData.append('remaining_tickets', values.remaining_tickets.toString())
+      if (values.description) formData.append('description', values.description)
+      formData.append('venue', values.venue)
       formData.append('area', values.area)
+      formData.append('performance_date', values.performance_date)
+      formData.append('start_time', values.start_time)
+      if (values.door_open_time) formData.append('door_open_time', values.door_open_time)
+      if (values.available_tickets !== undefined) {
+        formData.append('available_tickets', values.available_tickets.toString())
+      }
+      formData.append('ticket_price', values.ticket_price.toString())
+      if (values.reservation_url) formData.append('reservation_url', values.reservation_url)
 
       if (imageFile) {
         formData.append('poster_image', imageFile)
@@ -92,7 +109,7 @@ export function PerformanceForm({ theaters, initialData, isTheaterFixed = false 
       }
 
       // リダイレクトはServer Actionで行われる
-    } catch (err) {
+    } catch {
       setError('保存中にエラーが発生しました')
     } finally {
       setIsLoading(false)
@@ -102,34 +119,43 @@ export function PerformanceForm({ theaters, initialData, isTheaterFixed = false 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="theater_id"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>劇団</FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                disabled={isTheaterFixed}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="劇団を選択" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {theaters.map((theater) => (
-                    <SelectItem key={theater.id} value={theater.id}>
-                      {theater.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {isTheaterFixed ? (
+          <div className="space-y-2">
+            <FormLabel>劇団</FormLabel>
+            <div className="rounded-md border border-input bg-muted px-3 py-2">
+              {theaters[0]?.name || '劇団名'}
+            </div>
+            <input type="hidden" {...form.register('theater_id')} />
+          </div>
+        ) : (
+          <FormField
+            control={form.control}
+            name="theater_id"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>劇団</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="劇団を選択" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {theaters.map((theater) => (
+                      <SelectItem key={theater.id} value={theater.id}>
+                        {theater.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
 
         <FormField
           control={form.control}
@@ -150,7 +176,7 @@ export function PerformanceForm({ theaters, initialData, isTheaterFixed = false 
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>公演説明</FormLabel>
+              <FormLabel>公演説明（任意）</FormLabel>
               <FormControl>
                 <Textarea placeholder="公演の説明を入力" rows={5} {...field} />
               </FormControl>
@@ -161,26 +187,12 @@ export function PerformanceForm({ theaters, initialData, isTheaterFixed = false 
 
         <FormField
           control={form.control}
-          name="start_time"
+          name="venue"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>開演時刻</FormLabel>
+              <FormLabel>会場</FormLabel>
               <FormControl>
-                <Input type="datetime-local" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="remaining_tickets"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>残券数</FormLabel>
-              <FormControl>
-                <Input type="number" min={0} {...field} />
+                <Input placeholder="例: 下北沢駅前劇場" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -200,12 +212,117 @@ export function PerformanceForm({ theaters, initialData, isTheaterFixed = false 
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="東京">東京</SelectItem>
-                  <SelectItem value="大阪">大阪</SelectItem>
-                  <SelectItem value="名古屋">名古屋</SelectItem>
+                  <SelectItem value="下北沢">下北沢</SelectItem>
+                  <SelectItem value="新宿">新宿</SelectItem>
+                  <SelectItem value="渋谷">渋谷</SelectItem>
+                  <SelectItem value="池袋">池袋</SelectItem>
                   <SelectItem value="その他">その他</SelectItem>
                 </SelectContent>
               </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="performance_date"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>公演日</FormLabel>
+              <FormControl>
+                <Input type="date" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="start_time"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>開演時刻</FormLabel>
+                <FormControl>
+                  <Input type="time" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="door_open_time"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>開場時刻（任意）</FormLabel>
+                <FormControl>
+                  <Input type="time" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="available_tickets"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>残券数（任意）</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    min={0}
+                    placeholder="不明な場合は空欄"
+                    {...field}
+                    value={field.value ?? ''}
+                    onChange={(e) => {
+                      const value = e.target.value
+                      field.onChange(value === '' ? undefined : Number(value))
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="ticket_price"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>チケット価格</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    min={0}
+                    placeholder="円"
+                    {...field}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <FormField
+          control={form.control}
+          name="reservation_url"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>予約URL（任意）</FormLabel>
+              <FormControl>
+                <Input type="url" placeholder="https://example.com/reserve" {...field} />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}

@@ -24,7 +24,7 @@ export default async function PerformancesPage() {
     query = query.eq('theater_id', adminUser.theater_id!)
   }
 
-  const { data: performances } = await query.order('start_time', { ascending: false })
+  const { data: performances } = await query.order('performance_date', { ascending: false }).order('start_time', { ascending: false })
 
   return (
     <div className="space-y-6">
@@ -71,9 +71,11 @@ export default async function PerformancesPage() {
                   <TableCell className="font-medium">{performance.title}</TableCell>
                   <TableCell>{performance.theaters?.name}</TableCell>
                   <TableCell>
-                    {new Date(performance.start_time).toLocaleString('ja-JP')}
+                    {`${performance.performance_date} ${performance.start_time}`}
                   </TableCell>
-                  <TableCell>{performance.remaining_tickets}枚</TableCell>
+                  <TableCell>
+                    {performance.available_tickets !== null ? `${performance.available_tickets}枚` : '不明'}
+                  </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
                       <Button asChild variant="outline" size="sm">

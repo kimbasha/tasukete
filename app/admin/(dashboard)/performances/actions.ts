@@ -31,14 +31,21 @@ export async function createPerformance(formData: FormData) {
       posterImageUrl = await uploadPosterImage(imageFile)
     }
 
+    const availableTickets = formData.get('available_tickets')
+
     const validated = performanceSchema.parse({
       theater_id: theaterId,
       title: formData.get('title'),
-      description: formData.get('description'),
-      start_time: formData.get('start_time'),
-      remaining_tickets: Number(formData.get('remaining_tickets')),
+      description: formData.get('description') || undefined,
+      venue: formData.get('venue'),
       area: formData.get('area'),
-      poster_image_url: posterImageUrl,
+      performance_date: formData.get('performance_date'),
+      start_time: formData.get('start_time'),
+      door_open_time: formData.get('door_open_time') || undefined,
+      available_tickets: availableTickets ? Number(availableTickets) : undefined,
+      ticket_price: Number(formData.get('ticket_price')),
+      reservation_url: formData.get('reservation_url') || undefined,
+      poster_image_url: posterImageUrl || undefined,
     })
 
     const supabase = await createClient()
@@ -103,14 +110,21 @@ export async function updatePerformance(id: string, formData: FormData) {
       posterImageUrl = await uploadPosterImage(imageFile)
     }
 
+    const availableTickets = formData.get('available_tickets')
+
     const validated = performanceSchema.parse({
       theater_id: formData.get('theater_id'),
       title: formData.get('title'),
-      description: formData.get('description'),
-      start_time: formData.get('start_time'),
-      remaining_tickets: Number(formData.get('remaining_tickets')),
+      description: formData.get('description') || undefined,
+      venue: formData.get('venue'),
       area: formData.get('area'),
-      poster_image_url: posterImageUrl,
+      performance_date: formData.get('performance_date'),
+      start_time: formData.get('start_time'),
+      door_open_time: formData.get('door_open_time') || undefined,
+      available_tickets: availableTickets ? Number(availableTickets) : undefined,
+      ticket_price: Number(formData.get('ticket_price')),
+      reservation_url: formData.get('reservation_url') || undefined,
+      poster_image_url: posterImageUrl || undefined,
     })
 
     const { error } = await supabase
@@ -176,7 +190,7 @@ export async function deletePerformance(id: string) {
     revalidatePath('/')
 
     return { success: true }
-  } catch (error) {
+  } catch {
     return { error: '予期しないエラーが発生しました' }
   }
 }

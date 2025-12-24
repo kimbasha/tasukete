@@ -1,10 +1,18 @@
 import { Badge } from '@/components/ui/badge'
 
 interface TicketStatusBadgeProps {
-  availableTickets: number
+  availableTickets: number | null
 }
 
 export function TicketStatusBadge({ availableTickets }: TicketStatusBadgeProps) {
+  if (availableTickets === null) {
+    return (
+      <Badge variant="secondary" className="text-sm">
+        残券数不明
+      </Badge>
+    )
+  }
+
   if (availableTickets === 0) {
     return (
       <Badge variant="destructive" className="text-sm">
