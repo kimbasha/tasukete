@@ -9,7 +9,7 @@ export default async function Home() {
     .from('performances')
     .select(`
       *,
-      theater:theaters(*)
+      troupe:troupes(*)
     `)
     .gte('performance_date', new Date().toISOString().split('T')[0])
     .order('performance_date', { ascending: true })
