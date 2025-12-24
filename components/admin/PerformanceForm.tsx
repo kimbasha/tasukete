@@ -63,7 +63,7 @@ export function PerformanceForm({ theaters, initialData, isTheaterFixed = false 
   const form = useForm<PerformanceFormValues>({
     resolver: zodResolver(performanceSchema),
     defaultValues: {
-      theater_id: initialData?.theater_id || '',
+      theater_id: initialData?.theater_id || theaters[0]?.id || '',
       title: initialData?.title || '',
       description: initialData?.description || '',
       venue: initialData?.venue || '',
