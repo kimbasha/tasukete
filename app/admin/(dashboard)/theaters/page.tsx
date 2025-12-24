@@ -17,7 +17,7 @@ export default async function TheatersPage() {
   const supabase = await createClient()
 
   // theater_adminは自分の劇団のみ表示
-  let query = supabase.from('theaters').select('*')
+  let query = supabase.from('troupes').select('*')
 
   if (isTheaterAdmin(adminUser)) {
     query = query.eq('id', adminUser.theater_id!)

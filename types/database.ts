@@ -9,7 +9,7 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
-      theaters: {
+      troupes: {
         Row: {
           id: string
           name: string
@@ -134,6 +134,6 @@ export interface Database {
 }
 
 // Helper types
-export type Theater = Database['public']['Tables']['theaters']['Row']
+export type Troupe = Database['public']['Tables']['troupes']['Row']
 export type Performance = Database['public']['Tables']['performances']['Row']
 export type AdminUser = Database['public']['Tables']['admin_users']['Row']

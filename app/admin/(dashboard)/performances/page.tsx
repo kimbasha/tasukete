@@ -18,7 +18,7 @@ export default async function PerformancesPage() {
   const supabase = await createClient()
 
   // theater_adminは自分の劇団の公演のみ表示
-  let query = supabase.from('performances').select('*, theaters(name)')
+  let query = supabase.from('performances').select('*, troupes(name)')
 
   if (isTheaterAdmin(adminUser)) {
     query = query.eq('theater_id', adminUser.theater_id!)
@@ -69,7 +69,7 @@ export default async function PerformancesPage() {
                     )}
                   </TableCell>
                   <TableCell className="font-medium">{performance.title}</TableCell>
-                  <TableCell>{performance.theaters?.name}</TableCell>
+                  <TableCell>{performance.troupes?.name}</TableCell>
                   <TableCell>
                     {`${performance.performance_date} ${performance.start_time}`}
                   </TableCell>

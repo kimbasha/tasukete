@@ -2,12 +2,12 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { TicketStatusBadge } from '@/components/TicketStatusBadge'
-import { Performance, Theater } from '@/types/database'
+import { Performance, Troupe } from '@/types/database'
 import { Clock, MapPin, Ticket } from 'lucide-react'
 
 interface PerformanceCardProps {
   performance: Performance & {
-    theater?: Theater
+    troupe?: Troupe
   }
 }
 
@@ -37,9 +37,9 @@ export function PerformanceCard({ performance }: PerformanceCardProps) {
             />
           </div>
 
-          {performance.theater && (
+          {performance.troupe && (
             <p className="text-sm text-muted-foreground mb-3">
-              {performance.theater.name}
+              {performance.troupe.name}
             </p>
           )}
 
