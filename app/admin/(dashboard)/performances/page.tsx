@@ -74,7 +74,11 @@ export default async function PerformancesPage() {
                     {`${performance.performance_date} ${performance.start_time}`}
                   </TableCell>
                   <TableCell>
-                    {performance.available_tickets !== null ? `${performance.available_tickets}枚` : '当日券あり'}
+                    {performance.has_day_tickets
+                      ? '当日券あり'
+                      : performance.available_tickets !== null
+                      ? `${performance.available_tickets}枚`
+                      : '要確認'}
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">

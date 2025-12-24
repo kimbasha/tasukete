@@ -51,6 +51,7 @@ export interface Database {
           available_tickets: number | null
           ticket_price: number
           reservation_url: string | null
+          has_day_tickets: boolean
           status: 'upcoming' | 'today' | 'ended'
           created_at: string
           updated_at: string
@@ -69,6 +70,7 @@ export interface Database {
           available_tickets?: number | null
           ticket_price: number
           reservation_url?: string | null
+          has_day_tickets?: boolean
           status?: 'upcoming' | 'today' | 'ended'
           created_at?: string
           updated_at?: string
@@ -87,6 +89,7 @@ export interface Database {
           available_tickets?: number | null
           ticket_price?: number
           reservation_url?: string | null
+          has_day_tickets?: boolean
           status?: 'upcoming' | 'today' | 'ended'
           created_at?: string
           updated_at?: string

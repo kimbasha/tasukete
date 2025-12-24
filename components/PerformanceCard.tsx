@@ -31,7 +31,10 @@ export function PerformanceCard({ performance }: PerformanceCardProps) {
         <CardContent className="p-4">
           <div className="flex items-start justify-between gap-2 mb-2">
             <h3 className="font-bold text-lg line-clamp-2">{performance.title}</h3>
-            <TicketStatusBadge availableTickets={performance.available_tickets} />
+            <TicketStatusBadge
+              availableTickets={performance.available_tickets}
+              hasDayTickets={performance.has_day_tickets}
+            />
           </div>
 
           {performance.theater && (

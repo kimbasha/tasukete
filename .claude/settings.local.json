@@ -13,7 +13,13 @@
       "Bash(supabase login:*)",
       "Bash(npx husky init)",
       "Bash(npm run type-check:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(npx supabase db push:*)",
+      "Bash(npx eslint:*)",
+      "Bash(gh api:*)",
+      "Bash(repos/kimbasha/tasukete/rulesets/11347295 )",
+      "Bash(psql \"postgresql://postgres.cxnklzfenpnnuaeptlnr:Ky5Bb3NtxvZ39z@aws-0-ap-northeast-1.pooler.supabase.com:6543/postgres\" -c \"SELECT id, name FROM theaters ORDER BY name;\")",
+      "Bash(npx supabase:*)"
     ]
   }
 }
