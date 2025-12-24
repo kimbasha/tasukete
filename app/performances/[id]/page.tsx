@@ -19,7 +19,7 @@ export default async function PerformancePage({ params }: Props) {
     .from('performances')
     .select(`
       *,
-      theater:theaters(*)
+      troupe:troupes(*)
     `)
     .eq('id', id)
     .single()
