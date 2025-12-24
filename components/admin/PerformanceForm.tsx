@@ -277,14 +277,17 @@ export function PerformanceForm({ theaters, initialData, isTheaterFixed = false 
                 <FormLabel>残券数（任意）</FormLabel>
                 <FormControl>
                   <Input
-                    type="number"
-                    min={0}
+                    type="text"
+                    inputMode="numeric"
                     placeholder="不明な場合は空欄"
                     {...field}
                     value={field.value ?? ''}
                     onChange={(e) => {
                       const value = e.target.value
-                      field.onChange(value === '' ? undefined : Number(value))
+                      // 数字のみ許可
+                      if (value === '' || /^\d+$/.test(value)) {
+                        field.onChange(value === '' ? undefined : Number(value))
+                      }
                     }}
                   />
                 </FormControl>
@@ -301,11 +304,18 @@ export function PerformanceForm({ theaters, initialData, isTheaterFixed = false 
                 <FormLabel>チケット価格</FormLabel>
                 <FormControl>
                   <Input
-                    type="number"
-                    min={0}
+                    type="text"
+                    inputMode="numeric"
                     placeholder="円"
                     {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
+                    value={field.value || ''}
+                    onChange={(e) => {
+                      const value = e.target.value
+                      // 数字のみ許可
+                      if (value === '' || /^\d+$/.test(value)) {
+                        field.onChange(value === '' ? 0 : Number(value))
+                      }
+                    }}
                   />
                 </FormControl>
                 <FormMessage />
