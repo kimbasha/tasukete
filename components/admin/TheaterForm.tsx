@@ -60,7 +60,8 @@ export function TheaterForm({ initialData }: TheaterFormProps) {
         return
       }
 
-      // リダイレクトはServer Actionで行われる
+      // 成功時はリダイレクト
+      router.push('/admin/theaters')
     } catch (err) {
       setError('保存中にエラーが発生しました')
     } finally {

@@ -113,7 +113,8 @@ export function PerformanceForm({ theaters, initialData, isTheaterFixed = false 
         return
       }
 
-      // リダイレクトはServer Actionで行われる
+      // 成功時はリダイレクト
+      router.push('/admin/performances')
     } catch {
       setError('保存中にエラーが発生しました')
     } finally {

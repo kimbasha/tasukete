@@ -63,14 +63,13 @@ export async function createPerformance(formData: FormData) {
 
     revalidatePath('/admin/performances')
     revalidatePath('/')
+    return { success: true }
   } catch (error) {
     if (error instanceof z.ZodError) {
       return { error: 'バリデーションエラー', details: error.issues }
     }
     return { error: '予期しないエラーが発生しました' }
   }
-
-  redirect('/admin/performances')
 }
 
 /**
@@ -142,14 +141,13 @@ export async function updatePerformance(id: string, formData: FormData) {
 
     revalidatePath('/admin/performances')
     revalidatePath('/')
+    return { success: true }
   } catch (error) {
     if (error instanceof z.ZodError) {
       return { error: 'バリデーションエラー', details: error.issues }
     }
     return { error: '予期しないエラーが発生しました' }
   }
-
-  redirect('/admin/performances')
 }
 
 /**
