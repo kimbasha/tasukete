@@ -80,6 +80,7 @@ export function PerformanceForm({ theaters, initialData, isTheaterFixed = false 
   })
 
   const onSubmit = async (values: PerformanceFormValues) => {
+    console.log('Form values:', values)
     try {
       setIsLoading(true)
       setError(null)
@@ -140,7 +141,10 @@ export function PerformanceForm({ theaters, initialData, isTheaterFixed = false 
               <FormItem>
                 <FormLabel>劇団</FormLabel>
                 <Select
-                  onValueChange={field.onChange}
+                  onValueChange={(value) => {
+                    console.log('Selected theater:', value)
+                    field.onChange(value)
+                  }}
                   value={field.value || undefined}
                 >
                   <FormControl>
