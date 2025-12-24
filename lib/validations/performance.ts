@@ -13,6 +13,7 @@ export const performanceSchema = z.object({
   ticket_price: z.number().int().min(0, 'チケット価格は0以上で入力してください'),
   reservation_url: z.string().url('正しいURLを入力してください').optional().or(z.literal('')),
   poster_image_url: z.string().url('正しいURLを入力してください').optional().or(z.literal('')),
+  has_day_tickets: z.boolean().optional(),
 })
 
 export type PerformanceFormValues = z.infer<typeof performanceSchema>

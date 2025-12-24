@@ -13,9 +13,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   Select,
   SelectContent,
@@ -47,6 +49,7 @@ interface PerformanceFormProps {
     ticket_price: number
     reservation_url?: string
     poster_image_url?: string
+    has_day_tickets: boolean
   }
   isTheaterFixed?: boolean
 }
@@ -72,6 +75,7 @@ export function PerformanceForm({ theaters, initialData, isTheaterFixed = false 
       ticket_price: initialData?.ticket_price || 0,
       reservation_url: initialData?.reservation_url || '',
       poster_image_url: initialData?.poster_image_url || '',
+      has_day_tickets: initialData?.has_day_tickets || false,
     },
   })
 
@@ -94,6 +98,7 @@ export function PerformanceForm({ theaters, initialData, isTheaterFixed = false 
       }
       formData.append('ticket_price', values.ticket_price.toString())
       if (values.reservation_url) formData.append('reservation_url', values.reservation_url)
+      formData.append('has_day_tickets', values.has_day_tickets ? 'true' : 'false')
 
       if (imageFile) {
         formData.append('poster_image', imageFile)
@@ -136,7 +141,7 @@ export function PerformanceForm({ theaters, initialData, isTheaterFixed = false 
                 <FormLabel>劇団</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  value={field.value}
                 >
                   <FormControl>
                     <SelectTrigger>
@@ -205,7 +210,7 @@ export function PerformanceForm({ theaters, initialData, isTheaterFixed = false 
           render={({ field }) => (
             <FormItem>
               <FormLabel>エリア</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue />
@@ -277,14 +282,17 @@ export function PerformanceForm({ theaters, initialData, isTheaterFixed = false 
                 <FormLabel>残券数（任意）</FormLabel>
                 <FormControl>
                   <Input
-                    type="number"
-                    min={0}
+                    type="text"
+                    inputMode="numeric"
                     placeholder="不明な場合は空欄"
                     {...field}
                     value={field.value ?? ''}
                     onChange={(e) => {
                       const value = e.target.value
-                      field.onChange(value === '' ? undefined : Number(value))
+                      // 数字のみ許可
+                      if (value === '' || /^\d+$/.test(value)) {
+                        field.onChange(value === '' ? undefined : Number(value))
+                      }
                     }}
                   />
                 </FormControl>
@@ -301,11 +309,18 @@ export function PerformanceForm({ theaters, initialData, isTheaterFixed = false 
                 <FormLabel>チケット価格</FormLabel>
                 <FormControl>
                   <Input
-                    type="number"
-                    min={0}
+                    type="text"
+                    inputMode="numeric"
                     placeholder="円"
                     {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
+                    value={field.value || ''}
+                    onChange={(e) => {
+                      const value = e.target.value
+                      // 数字のみ許可
+                      if (value === '' || /^\d+$/.test(value)) {
+                        field.onChange(value === '' ? 0 : Number(value))
+                      }
+                    }}
                   />
                 </FormControl>
                 <FormMessage />
@@ -313,6 +328,29 @@ export function PerformanceForm({ theaters, initialData, isTheaterFixed = false 
             )}
           />
         </div>
+
+        <FormField
+          control={form.control}
+          name="has_day_tickets"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <div className="space-y-1 leading-none">
+                <FormLabel>
+                  当日券販売あり
+                </FormLabel>
+                <FormDescription>
+                  残券数が不明でも当日券の販売がある場合はチェックしてください
+                </FormDescription>
+              </div>
+            </FormItem>
+          )}
+        />
 
         <FormField
           control={form.control}

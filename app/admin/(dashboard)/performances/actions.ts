@@ -32,6 +32,7 @@ export async function createPerformance(formData: FormData) {
     }
 
     const availableTickets = formData.get('available_tickets')
+    const hasDayTickets = formData.get('has_day_tickets') === 'true'
 
     const validated = performanceSchema.parse({
       theater_id: theaterId,
@@ -46,6 +47,7 @@ export async function createPerformance(formData: FormData) {
       ticket_price: Number(formData.get('ticket_price')),
       reservation_url: formData.get('reservation_url') || undefined,
       poster_image_url: posterImageUrl || undefined,
+      has_day_tickets: hasDayTickets,
     })
 
     const supabase = await createClient()
@@ -111,6 +113,7 @@ export async function updatePerformance(id: string, formData: FormData) {
     }
 
     const availableTickets = formData.get('available_tickets')
+    const hasDayTickets = formData.get('has_day_tickets') === 'true'
 
     const validated = performanceSchema.parse({
       theater_id: formData.get('theater_id'),
@@ -125,6 +128,7 @@ export async function updatePerformance(id: string, formData: FormData) {
       ticket_price: Number(formData.get('ticket_price')),
       reservation_url: formData.get('reservation_url') || undefined,
       poster_image_url: posterImageUrl || undefined,
+      has_day_tickets: hasDayTickets,
     })
 
     const { error } = await supabase
