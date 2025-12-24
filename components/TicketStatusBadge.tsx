@@ -5,10 +5,10 @@ interface TicketStatusBadgeProps {
 }
 
 export function TicketStatusBadge({ availableTickets }: TicketStatusBadgeProps) {
-  if (availableTickets === null) {
+  if (availableTickets === null || availableTickets === undefined) {
     return (
-      <Badge variant="secondary" className="text-sm">
-        残券数不明
+      <Badge variant="default" className="bg-blue-600 hover:bg-blue-700 text-sm">
+        当日券あり
       </Badge>
     )
   }

@@ -143,7 +143,7 @@ export default async function AdminDashboard() {
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-medium">
-                      {performance.available_tickets !== null ? `残${performance.available_tickets}枚` : '残券数不明'}
+                      {performance.available_tickets !== null ? `残${performance.available_tickets}枚` : '当日券あり'}
                     </p>
                   </div>
                 </div>
@@ -180,7 +180,7 @@ export default async function AdminDashboard() {
                   </div>
                   <div className="text-right">
                     <p className="font-bold text-destructive">
-                      {performance.available_tickets !== null ? `残${performance.available_tickets}枚` : '残券数不明'}
+                      {performance.available_tickets !== null ? `残${performance.available_tickets}枚` : '当日券あり'}
                     </p>
                   </div>
                 </div>

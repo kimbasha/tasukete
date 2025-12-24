@@ -136,7 +136,7 @@ export function PerformanceForm({ theaters, initialData, isTheaterFixed = false 
                 <FormLabel>劇団</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  value={field.value}
                 >
                   <FormControl>
                     <SelectTrigger>
@@ -205,7 +205,7 @@ export function PerformanceForm({ theaters, initialData, isTheaterFixed = false 
           render={({ field }) => (
             <FormItem>
               <FormLabel>エリア</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue />
