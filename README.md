@@ -1,3 +1,6 @@
+## Next.js + Supabaseでモダンな開発するぞ！と思ってclaude codeにコードを書いてもらってたけど、レビューができなかったので一旦断念…勉強し直してきます…
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
